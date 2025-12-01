@@ -76,7 +76,9 @@ RegisterNetEvent('qb-tow:server:11101110', function(drops)
     local taxAmount = math.ceil((price / 100) * config.paymentTax)
     local payment = price - taxAmount
 
-    Player.Functions.AddJobReputation(1)
+    local newrep = Player.PlayerData.metadata["jobrep"]
+    newrep.tow += drops
+    Player.Functions.SetMetaData("jobrep", newrep)
     Player.Functions.AddMoney("bank", payment, "tow-salary")
     TriggerClientEvent('ox_lib:notify', source, {
       id = 'tow_pay',
