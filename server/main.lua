@@ -10,14 +10,15 @@ RegisterNetEvent('qbx_tow:server:claimItems', function()
     local playerData = exports.qbx_core:GetPlayer(source).PlayerData
     local playerLevel = exports.lenix_jobcenter:GetPlayerLevel(playerData.citizenid, 'tow')
     local items = config.rewardItems
+    local itemIndex = math.random(1, 3)
     assert(#items > 0, "Reward items table is empty")
     if playerLevel >= 20 and playerLevel < 30 then
-        exports.ox_inventory:AddItem(source, items[index], math.random(1, 2))
+        exports.ox_inventory:AddItem(source, items[itemIndex], math.random(1, 2))
     else
         if playerLevel >= 30 and playerLevel < 40 then
-            exports.ox_inventory:AddItem(source, items[index], math.random(2, 3))
+            exports.ox_inventory:AddItem(source, items[itemIndex], math.random(2, 3))
         else
-            exports.ox_inventory:AddItem(source, items[index], math.random(3, 5))
+            exports.ox_inventory:AddItem(source, items[itemIndex], math.random(3, 5))
         end
     end
 end)

@@ -101,17 +101,6 @@ local function drawDropOffMarker()
     end)
 end
 
-local function getVehicleInDirection(coordFrom, coordTo)
-    local rayHandle = StartShapeTestRay(coordFrom.x, coordFrom.y, coordFrom.z, coordTo.x, coordTo.y, coordTo.z, 2, cache.ped, 0)
-    local _, hit, _, _, entity = GetShapeTestResult(rayHandle)
-    
-    if hit and DoesEntityExist(entity) and IsEntityAVehicle(entity) then
-        return entity
-    end
-    
-    return 0
-end
-
 local function isTowVehicle(vehicle)
     for k in pairs(config.vehicles) do
         if GetEntityModel(vehicle) == joaat(k) then
@@ -241,7 +230,7 @@ local function deliverVehicle(vehicle)
     SetBlipRoute(CurrentBlip, true)
     SetBlipRouteColour(CurrentBlip, 3)
     givePlayerRep()
-    if npcVehicleEntityId ~= nil then exports.ox_target:removeLocalEntity(veh, 'vehicleToTow') end
+    if npcVehicleEntityId ~= nil then exports.ox_target:removeLocalEntity(vehicle, 'vehicleToTow') end
 end
 
 local function CreateElements()
@@ -267,6 +256,21 @@ local function CreateElements()
 
     CreateZone("main")
     CreateZone("vehicle")
+end
+
+local function getNearestVehicle()
+    local playerCoords = GetEntityCoords(cache.ped)
+    local playerVehicle = GetVehiclePedIsIn(cache.ped, false) -- Your current vehicle
+    local vehicles = GetGamePool('CVehicle')
+    
+    for _, vehicle in pairs(vehicles) do
+        if DoesEntityExist(vehicle) and vehicle ~= playerVehicle --[[ skip the vehicle you're in ]] then
+            if #(playerCoords - GetEntityCoords(vehicle)) < 10.0 then
+                return vehicle
+            end
+        end
+    end
+    return 0
 end
 -- Events
 
@@ -338,25 +342,6 @@ RegisterNetEvent('qb-tow:client:TowVehicle', function()
     local vehicle = cache.vehicle
     if isTowVehicle(vehicle) then
         if not CurrentTow then
-            local coordA = GetEntityCoords(cache.ped)
-            local coordB = GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, -30.0, 0.0)
-            local targetVehicle = getVehicleInDirection(coordA, coordB)
-
-            local function getNearestVehicle()
-                local playerCoords = GetEntityCoords(cache.ped)
-                local playerVehicle = GetVehiclePedIsIn(cache.ped, false) -- Your current vehicle
-                local vehicles = GetGamePool('CVehicle')
-                
-                for _, vehicle in pairs(vehicles) do
-                    if DoesEntityExist(vehicle) 
-                    and vehicle ~= playerVehicle  -- Skip the vehicle you're in
-                    and #(playerCoords - GetEntityCoords(vehicle)) < 10.0 then
-                        return vehicle
-                    end
-                end
-                return 0
-            end
-
             local targetVehicle = getNearestVehicle()
             if targetVehicle == 0 then exports.qbx_core:Notify('Get closer to the vehicle', 'error') return end
             if NpcOn and CurrentLocation and targetVehicle ~= 0 then
