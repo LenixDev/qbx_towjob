@@ -230,7 +230,7 @@ local function deliverVehicle(vehicle)
     SetBlipRoute(CurrentBlip, true)
     SetBlipRouteColour(CurrentBlip, 3)
     givePlayerRep()
-    if npcVehicleEntityId ~= nil then exports.ox_target:removeLocalEntity(veh, 'vehicleToTow') end
+    if npcVehicleEntityId ~= nil then exports.ox_target:removeLocalEntity(vehicle, 'vehicleToTow') end
 end
 
 local function CreateElements()
