@@ -2,14 +2,14 @@ local config = require 'config.server'
 local sharedConfig = require 'config.shared'
 local Bail = {}
 
-RegisterNetEvent('tr_tow:givePlayerRep', function()
+RegisterNetEvent('qbx_tow:server:givePlayerRep', function()
     local src = source
-    exports.tr_jobcenter:GivePlayerRep(source, exports.qbx_core:GetPlayer(source).PlayerData.citizenid, 'tow', 'low')
+    exports.lenix_jobcenter:GivePlayerRep(source, exports.qbx_core:GetPlayer(source).PlayerData.citizenid, 'tow', 'low')
 end)
 
-RegisterNetEvent('tr_tow:givePlayerRep', function()
+RegisterNetEvent('qbx_tow:server:claimItems', function()
     local playerData = exports.qbx_core:GetPlayer(source).PlayerData
-    local playerLevel = exports.tr_jobcenter:GetPlayerLevel(playerData.citizenid, 'tow')
+    local playerLevel = exports.lenix_jobcenter:GetPlayerLevel(playerData.citizenid, 'tow')
     local itemIndex = math.random(1, 3)
     local items = {'glass', 'iron', 'aluminum'}
     if playerLevel >= 20 and playerLevel < 30 then
@@ -95,7 +95,7 @@ RegisterNetEvent('qb-tow:server:11101110', function(drops)
     end
     local price = (DropPrice * drops) + bonus
     local taxAmount = math.ceil((price / 100) * config.paymentTax)
-    local payment = (price - taxAmount) * exports.tr_jobcenter:GetPlayerDifficultyMultiplier(Player.PlayerData.citizenid, 'tow')
+    local payment = (price - taxAmount) * exports.lenix_jobcenter:GetPlayerDifficultyMultiplier(Player.PlayerData.citizenid, 'tow')
 
     Player.Functions.AddMoney("bank", payment, "tow-salary")
     TriggerClientEvent('ox_lib:notify', source, {

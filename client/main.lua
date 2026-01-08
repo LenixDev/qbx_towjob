@@ -17,7 +17,7 @@ local npcVehicleEntityId
 -- Functions
 
 local function givePlayerRep()
-    TriggerServerEvent('tr_tow:givePlayerRep')
+    TriggerServerEvent('qbx_tow:server:givePlayerRep')
 end
 
 local function playAnimation(veh)
@@ -55,7 +55,7 @@ local function playAnimation(veh)
 end
 
 local function claimItems()
-    TriggerServerEvent('tr_tow:server:claimItems')
+    TriggerServerEvent('qbx_tow:server:claimItems')
 end
 
 local function claimVehicleItems(veh)
